@@ -12,6 +12,8 @@ dependencies = [
     "pandas>=2.3.3",
     "sqlalchemy>=2.0.45",
 ]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
 
 [project.scripts]
 pandas-tosql-dbx-fix = "pandas_tosql_dbx_fix:main"
@@ -19,3 +21,6 @@ pandas-tosql-dbx-fix = "pandas_tosql_dbx_fix:main"
 [build-system]
 requires = ["uv_build>=0.9.21,<0.10.0"]
 build-backend = "uv_build"
+
+[project.urls]
+Homepage = "https://github.com/beefupinetree/pandas-tosql-dbx-fix"
