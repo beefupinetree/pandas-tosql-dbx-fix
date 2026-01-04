@@ -1,0 +1,21 @@
+[project]
+name = "pandas-tosql-dbx-fix"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Tarek Samhan", email = "tsamhan@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "databricks-sqlalchemy>=2.0.8",
+    "pandas>=2.3.3",
+    "sqlalchemy>=2.0.45",
+]
+
+[project.scripts]
+pandas-tosql-dbx-fix = "pandas_tosql_dbx_fix:main"
+
+[build-system]
+requires = ["uv_build>=0.9.21,<0.10.0"]
+build-backend = "uv_build"
