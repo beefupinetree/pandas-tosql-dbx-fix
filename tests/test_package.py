@@ -20,8 +20,6 @@ token = os.getenv("DATABRICKS_TOKEN", "False")
 table = "to_sql_table"
 # Extra arguments are passed untouched to databricks-sql-connector
 # See src/databricks/sql/thrift_backend.py for complete list
-# You can change the 'auth_type' to 'pat' if you want to use personal access tokens, but you will need to change the connection string to add the token there.
-# Ex: https://github.com/databricks/databricks-sqlalchemy/blob/6b80531e9ff008b59edc5d53bc2e4466f3fa5489/sqlalchemy_example.py#L61
 extra_connect_args = {
     "user_agent_entry": "Tarek's workaround to avoid the _user_agent_entry warning message",
 }
@@ -54,6 +52,7 @@ def create_test_dataframe(n_rows: int):
 
 
 def connect_to_dbx_oauth():
+    # Connect to Databricks using oauth, which authenticates using the web browser.
     extra_connect_args["auth_type"] = "databricks-oauth"
 
     return sqlalchemy.create_engine(
@@ -64,6 +63,8 @@ def connect_to_dbx_oauth():
 
 
 def connect_to_dbx_pat():
+    # Connect to Databricks using a personal access token.
+    # Ex: https://github.com/databricks/databricks-sqlalchemy/blob/6b80531e9ff008b59edc5d53bc2e4466f3fa5489/sqlalchemy_example.py#L61
     extra_connect_args["auth_type"] = "pat"
 
     return sqlalchemy.create_engine(
