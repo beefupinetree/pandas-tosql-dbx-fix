@@ -35,8 +35,9 @@ hpath = os.getenv("DATABRICKS_HTTP_PATH", "False")
 catalog = os.getenv("CATALOG", "False")
 schema = os.getenv("SCHEMA", "False")
 token = os.getenv("DATABRICKS_TOKEN", "False")
+
 table_name = "to_sql_table"
-test_table_rows = 100
+test_table_rows = 1000
 
 extra_connect_args = {
     "user_agent_entry": "Tarek's workaround to avoid the _user_agent_entry warning message",
