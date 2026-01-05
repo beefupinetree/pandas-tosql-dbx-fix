@@ -32,6 +32,7 @@ python -m pip install pandas-tosql-dbx-fix
 Once the package in installed, you can use the code here to get started with the pandas-tosql-dbx-fix library in your code:
 
 ```python
+import os
 import pandas_tosql_dbx_fix as pdx
 
 # Use your own values for the following variables
@@ -47,14 +48,14 @@ extra_connect_args = {
     "user_agent_entry": "Tarek's workaround to avoid the _user_agent_entry warning message",
 }
 
-df = create_test_dataframe(test_table_rows)
+df = pdx.create_test_dataframe(test_table_rows)
 
-# You can also connect to Databricks using a token with the dbx.connect_to_dbx_pat() function, or by creating your  own SQLAlchemy engine.
-db_con = dbx.connect_to_dbx_oauth(
+# You can also connect to Databricks using a token with the pdx.connect_to_dbx_pat() function, or by creating your  own SQLAlchemy engine.
+db_con = pdx.connect_to_dbx_oauth(
         server, hpath, catalog, schema, extra_connect_args
     )
 
-dbx.to_sql_dbx(
+pdx.to_sql_dbx(
             df,
             db_con,
             f"{catalog}.{schema}.{table_name}",
