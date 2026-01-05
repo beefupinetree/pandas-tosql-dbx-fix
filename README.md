@@ -13,12 +13,7 @@ Fix for the Pandas to_sql() dataframe method that fails when we try pushing more
 
 - [Installation](#installation)
 - [Execution / Usage](#execution--usage)
-- [Technologies](#technologies)
-- [Features](#features)
 - [Contributing](#contributing)
-- [Contributors](#contributors)
-- [Author](#author)
-- [Change log](#change-log)
 - [License](#license)
 
 ## Installation
