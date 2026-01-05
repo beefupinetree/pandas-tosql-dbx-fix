@@ -4,10 +4,49 @@ from typing import Literal
 from databricks.sqlalchemy.base import DatabricksDialect
 from pandas._typing import DtypeArg, IndexLabel
 import sqlalchemy
-import time
 
-# Fix for the Pandas to_sql() dataframe method that fails when we try pushing more than 256 values.
-# TODO: Try packaging it instead
+
+def connect_to_dbx_oauth(
+    server: str,
+    hpath: str,
+    catalog: str,
+    schema: str,
+    extra_connect_args: dict[str, str],
+):
+    # Connect to Databricks using oauth, which authenticates using the web browser.
+    extra_connect_args["auth_type"] = "databricks-oauth"
+
+    return sqlalchemy.create_engine(
+        url=f"databricks://{server}?"
+        + f"http_path={hpath}&catalog={catalog}&schema={schema}",
+        connect_args=extra_connect_args,
+    )
+
+
+def connect_to_dbx_pat(
+    server: str,
+    hpath: str,
+    catalog: str,
+    schema: str,
+    token: str,
+    extra_connect_args: dict[str, str],
+):
+    # Connect to Databricks using a personal access token.
+    # Ex: https://github.com/databricks/databricks-sqlalchemy/blob/6b80531e9ff008b59edc5d53bc2e4466f3fa5489/sqlalchemy_example.py#L61
+    extra_connect_args["auth_type"] = "pat"
+
+    return sqlalchemy.create_engine(
+        url=f"databricks://token:{token}@{server}?"
+        + f"http_path={hpath}&catalog={catalog}&schema={schema}",
+        connect_args=extra_connect_args,
+    )
+
+
+def create_test_dataframe(n_rows: int):
+    data = {
+        "RangeColumn1": range(0, n_rows),
+    }
+    return pd.DataFrame(data)
 
 
 def to_sql_dbx(
@@ -131,48 +170,6 @@ def to_sql_dbx(
                 compile_kwargs={"literal_binds": True}, dialect=DatabricksDialect()
             )
             # the standard process is to execute the stmt directly without compiling it
-            _ = conn.execute(compiled_stmt)
+            cursor_result = conn.execute(compiled_stmt)
 
-
-if __name__ == "__main__":
-    server = "YOUR OWN DATABRICKS SERVER"
-    hpath = "YOUR OWN WAREHOUSE"
-    catalog = "YOUR CATALOG NAME"
-    schema = "YOUR SCHEMA NAME"
-    table = "to_sql_table"
-
-    # Extra arguments are passed untouched to databricks-sql-connector
-    # See src/databricks/sql/thrift_backend.py for complete list
-    # You can change the 'auth_type' to 'pat' if you want to use personal access tokens, but you will need to change the connection string to add the token there.
-    # Ex: https://github.com/databricks/databricks-sqlalchemy/blob/6b80531e9ff008b59edc5d53bc2e4466f3fa5489/sqlalchemy_example.py#L61
-    extra_connect_args = {
-        "user_agent_entry": "Tarek's workaround to avoid the _user_agent_entry warning message",
-        "auth_type": "databricks-oauth",
-    }
-
-    db_con = sqlalchemy.create_engine(
-        url=f"databricks://{server}?"
-        + f"http_path={hpath}&catalog={catalog}&schema={schema}",
-        connect_args=extra_connect_args,
-    )
-
-    # Create a test dataframe from a dictionary with a column name as the key and a range as the value
-    # Change the number of rows in the test dataframe by changing the variable 'n'
-    n = 1000
-    data = {
-        "RangeColumn1": range(0, n),
-    }
-
-    # Create the DataFrame
-    df = pd.DataFrame(data)
-
-    tic = time.time()
-    # Push the dataframe to Databricks
-    to_sql_dbx(
-        df,
-        db_con,
-        f"{catalog}.{schema}.{table}",
-        if_exists="append",
-    )
-    toc = time.time()
-    print(f"Wrote {n} rows to {catalog}.{schema}.{table} in {toc - tic:,.1f} seconds")
+    return cursor_result.rowcount  # the rowcount is always -1 when it's successful
