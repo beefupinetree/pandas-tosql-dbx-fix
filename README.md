@@ -1,10 +1,7 @@
 # Pandas tosql() method fix for Databricks
-
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 [![Databricks](https://img.shields.io/badge/Databricks-FF3621?logo=databricks&logoColor=fff)](#)
 [![version](https://img.shields.io/badge/version-1.0.0-blue)](#)
 [![PyPI version](https://badge.fury.io/py/your-package.svg)](https://badge.fury.io/py/your-package)
-[![Publish to PyPI](https://github.com/username/repo/actions/workflows/pypi-publish.yml/badge.svg)](https://github.com/username/repo/actions/workflows/pypi-publish.yml)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
 Fix for the Pandas to_sql() dataframe method that fails when we try pushing more than 256 values to a Databricks table.
