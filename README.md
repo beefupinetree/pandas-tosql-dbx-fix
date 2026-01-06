@@ -1,17 +1,17 @@
-# Pandas tosql() method fix for Databricks
+# Pandas to_sql() method fix for Databricks
 [![Databricks](https://img.shields.io/badge/Databricks-FF3621?logo=databricks&logoColor=fff)](#)
 [![version](https://img.shields.io/badge/version-1.0.0-blue)](#)
 [![PyPI version](https://badge.fury.io/py/your-package.svg)](https://badge.fury.io/py/your-package)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-Fix for the Pandas to_sql() dataframe method that fails when we try pushing more than 256 values to a Databricks table.
+Fix for the Pandas `to_sql()` dataframe method that fails when we try pushing more than 255 values to a Databricks table.
 
 **Table of Contents**
 
 - [Installation](#installation)
 - [Execution / Usage](#execution--usage)
 - [Background and core issue](#background-and-core-issue)
-- [What the package does](#what-the-package-does)
+- [What this package does differently](#what-this-package-does-differently)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -56,8 +56,20 @@ pdx.to_sql_dbx(
 ```
 
 ## Background and core issue
+The Pandas `to_sql()` function worked well with Databricks up until November 2023 with the 3.0.0 release of the *Databricks SQL Connector* for Python. This release introduced [Native Parameters](https://github.com/databricks/databricks-sql-python/blob/main/docs/parameters.md#using-native-parameters) which replaced a value in a SQL query to a parameter. Here is an example of the same `to_sql()` command that writes one row into a table, and what the query looks like when it's sent to Databricks before and after implementing native parameters:
 
-## What the package does
+Before 3.0.0 and native parameters:
+>`INSERT INTO table (col_1, col_2) VALUES (100, 250)`
+
+After 3.0.0 and native parameters:
+>`INSERT INTO table (col_1, col_2) VALUES (:value1, :value2)`
+---
+The issue with the 'Native Parameter' change is that these parameters are [limited to 255 in a single query execution](https://github.com/databricks/databricks-sql-python/blob/main/docs/parameters.md#when-to-use-inline-parameters). Which ultimately means that the Pandas `to_sql()` function will fail when trying to insert more than 255 values into a Databricks table. Not 255 rows, but 255 *values*. This practically renders the `to_sql()`function unusable.
+
+## What this package does differently
+The `pandas-tosql-dbx-fix` package isolates the Pandas code responsible for building and executing the SQL queries when `to_sql()` is called. The main difference is that instead of building the SQL query and sending it to Databricks, the package compiles the query using the Databricks dialect first, *and then* sends it out to a Databricks SQL warehouse. Compiling the query replaces the parameters (ex: :value1, :value2) with their real values. This removes parameters from the query entirely and bypasses the 255 parameter limit. You can find this [here](https://github.com/beefupinetree/pandas-tosql-dbx-fix/blob/e6adbb80d58aca38ccf42327611e22b945c8d336/src/pandas_tosql_dbx_fix/main.py#L174) in the code.
+
+I also changed the way the source dataframe gets broken up into chunks, since I started running into issues once a single SQL query tried to insert more than 950,000 values at once. I added some logic [here](https://github.com/beefupinetree/pandas-tosql-dbx-fix/blob/e6adbb80d58aca38ccf42327611e22b945c8d336/src/pandas_tosql_dbx_fix/main.py#L144) that limits each SQL query to 900,000 values. Each chunk now contains `n_cols * n_rows <= 900,000`.
 
 ## Contributing
 
