@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Tarek Samhan", email = "tsamhan@gmail.com" }
 ]
-requires-python = ">=3.14"
+requires-python = ">=3.10"
 dependencies = [
     "databricks-sqlalchemy>=2.0.8",
     "pandas>=2.3.3",
