@@ -11,10 +11,12 @@ def connect_to_dbx_oauth(
     hpath: str,
     catalog: str,
     schema: str,
-    extra_connect_args: dict[str, str],
 ):
     # Connect to Databricks using oauth, which authenticates using the web browser.
-    extra_connect_args["auth_type"] = "databricks-oauth"
+    extra_connect_args = {
+        "user_agent_entry": "Tarek's workaround to avoid the _user_agent_entry warning message",
+        "auth_type": "databricks-oauth",
+    }
 
     return sqlalchemy.create_engine(
         url=f"databricks://{server}?"
@@ -29,11 +31,13 @@ def connect_to_dbx_pat(
     catalog: str,
     schema: str,
     token: str,
-    extra_connect_args: dict[str, str],
 ):
     # Connect to Databricks using a personal access token.
     # Ex: https://github.com/databricks/databricks-sqlalchemy/blob/6b80531e9ff008b59edc5d53bc2e4466f3fa5489/sqlalchemy_example.py#L61
-    extra_connect_args["auth_type"] = "pat"
+    extra_connect_args = {
+        "user_agent_entry": "Tarek's workaround to avoid the _user_agent_entry warning message",
+        "auth_type": "pat",
+    }
 
     return sqlalchemy.create_engine(
         url=f"databricks://token:{token}@{server}?"
@@ -60,7 +64,7 @@ def to_sql_dbx(
     chunksize: int | None = None,
     dtype: DtypeArg | None = None,
 ) -> int | None:
-    """Insert data directly into a Databricks delta table from on-prem Windows or Linux.
+    """Insert data directly into a Databricks delta table from Windows or Linux.
 
     Args:
         frame (Dataframe): Pandas dataframe
@@ -115,6 +119,7 @@ def to_sql_dbx(
         index_label=index_label,
         dtype=dtype,
     )
+
     # The create() method handles all 3 options for the 'if_exists' argument
     table.create()
 

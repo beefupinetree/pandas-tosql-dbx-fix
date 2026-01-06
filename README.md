@@ -30,25 +30,21 @@ import os
 import pandas_tosql_dbx_fix as pdx
 
 # Use your own values for the following variables
-server = os.getenv("DATABRICKS_SERVER_HOSTNAME", "False")
-hpath = os.getenv("DATABRICKS_HTTP_PATH", "False")
-catalog = os.getenv("CATALOG", "False")
-schema = os.getenv("SCHEMA", "False")
-token = os.getenv("DATABRICKS_TOKEN", "False")
+server = "YOUR_DATABRICKS_SERVER_HOSTNAME"
+hpath = "YOUR_DATABRICKS_HTTP_PATH"
+catalog = "YOUR_CATALOG_NAME"
+schema = "YOUR_SCHEMA_NAME"
+# token = "YOUR_DATABRICKS_TOKEN" # if needed
 
 table_name = "to_sql_table"
 test_table_rows = 1000
-
-extra_connect_args = {
-    "user_agent_entry": "Tarek's workaround to avoid the _user_agent_entry warning message",
-}
 
 df = pdx.create_test_dataframe(test_table_rows)
 
 # You can also connect to Databricks using a token with the pdx.connect_to_dbx_pat() function,
 # or by creating your own SQLAlchemy engine.
 db_con = pdx.connect_to_dbx_oauth(
-        server, hpath, catalog, schema, extra_connect_args
+        server, hpath, catalog, schema
     )
 
 pdx.to_sql_dbx(

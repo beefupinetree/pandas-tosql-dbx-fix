@@ -4,9 +4,9 @@ import os
 import pytest
 
 try:
-    from pandas_tosql_dbx_fix.main import to_sql_dbx as dbx
+    import pandas_tosql_dbx_fix as pdx
 except ModuleNotFoundError:
-    from src.pandas_tosql_dbx_fix.main import to_sql_dbx as dbx
+    import src.pandas_tosql_dbx_fix as pdx
 
 # My environment variables are declared in a .env file in the package's root directory
 # so VS Code can read them, and in my ~/.bashrc file so pytest can access them from here.
@@ -42,14 +42,12 @@ def timer(func):
 
 
 @timer
-@pytest.mark.parametrize("n_rows", [1, 100, 1000000])
+@pytest.mark.parametrize("n_rows", [1, 1000, 1000000])
 def test_push_df_pat(n_rows: int):
-    db_con = dbx.connect_to_dbx_pat(
-        server, hpath, catalog, schema, token, extra_connect_args
-    )
-    df = dbx.create_test_dataframe(n_rows)
+    db_con = pdx.connect_to_dbx_pat(server, hpath, catalog, schema, token)
+    df = pdx.create_test_dataframe(n_rows)
     assert (
-        dbx.to_sql_dbx(
+        pdx.to_sql_dbx(
             df,
             db_con,
             f"{catalog}.{schema}.{table_name}",
