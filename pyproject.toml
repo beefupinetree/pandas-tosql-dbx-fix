@@ -1,6 +1,6 @@
 [project]
 name = "pandas-tosql-dbx-fix"
-version = "1.0.0"
+version = "1.0.1"
 description = "Fix for the Pandas to_sql() dataframe method that fails when we try pushing more than 256 values."
 readme = "README.md"
 authors = [

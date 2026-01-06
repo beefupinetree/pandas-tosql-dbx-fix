@@ -1,6 +1,6 @@
 # Pandas to_sql() method fix for Databricks
 [![Databricks](https://img.shields.io/badge/Databricks-FF3621?logo=databricks&logoColor=fff)](#)
-[![version](https://img.shields.io/badge/version-1.0.0-blue)](#)
+[![version](https://img.shields.io/badge/version-1.0.1-blue)](#)
 [![PyPI version](https://badge.fury.io/py/your-package.svg)](https://badge.fury.io/py/your-package)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
@@ -47,6 +47,7 @@ db_con = pdx.connect_to_dbx_oauth(
         server, hpath, catalog, schema
     )
 
+# The function takes the same arguments as the to_sql() method in Pandas
 pdx.to_sql_dbx(
             df,
             db_con,
