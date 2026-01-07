@@ -14,7 +14,7 @@ def connect_to_dbx_oauth(
 ):
     # Connect to Databricks using oauth, which authenticates using the web browser.
     extra_connect_args = {
-        "user_agent_entry": "Tarek's workaround to avoid the _user_agent_entry warning message",
+        "user_agent_entry": "Tarek's workaround",
         "auth_type": "databricks-oauth",
     }
 
@@ -35,7 +35,7 @@ def connect_to_dbx_pat(
     # Connect to Databricks using a personal access token.
     # Ex: https://github.com/databricks/databricks-sqlalchemy/blob/6b80531e9ff008b59edc5d53bc2e4466f3fa5489/sqlalchemy_example.py#L61
     extra_connect_args = {
-        "user_agent_entry": "Tarek's workaround to avoid the _user_agent_entry warning message",
+        "user_agent_entry": "Tarek's workaround",
         "auth_type": "pat",
     }
 

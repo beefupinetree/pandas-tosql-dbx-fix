@@ -23,7 +23,7 @@ python -m pip install pandas-tosql-dbx-fix
 
 ## Execution / Usage
 
-Once the package in installed, you can use the code here to get started with the pandas-tosql-dbx-fix library in your code:
+Once the package in installed, you can use the code here to get started with the pandas-tosql-dbx-fix library:
 
 ```python
 import os
@@ -57,7 +57,7 @@ pdx.to_sql_dbx(
 ```
 
 ## Background and core issue
-The Pandas `to_sql()` function worked well with Databricks up until November 2023 with the 3.0.0 release of the *Databricks SQL Connector* for Python. This release introduced [Native Parameters](https://github.com/databricks/databricks-sql-python/blob/main/docs/parameters.md#using-native-parameters) which replaced a value in a SQL query to a parameter. Here is an example of the same `to_sql()` command that writes one row into a table, and what the query looks like when it's sent to Databricks before and after implementing native parameters:
+The Pandas `to_sql()` function worked well with Databricks up until November 2023 with the [3.0.0 release](https://github.com/databricks/databricks-sql-python/releases/tag/v3.0.0) of the *Databricks SQL Connector* for Python. This release introduced [Native Parameters](https://github.com/databricks/databricks-sql-python/blob/main/docs/parameters.md#using-native-parameters) which replaced a value in a SQL query to a parameter. Here is an example of the same `to_sql()` command that writes one row into a table, and what the query looks like when it's sent to Databricks before and after implementing native parameters:
 
 Before 3.0.0 and native parameters:
 >`INSERT INTO table (col_1, col_2) VALUES (100, 250)`
