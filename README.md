@@ -25,7 +25,6 @@ python -m pip install pandas-tosql-dbx-fix
 Once the package in installed, you can use the code here to get started with the pandas-tosql-dbx-fix library:
 
 ```python
-import os
 import pandas_tosql_dbx_fix as pdx
 
 # Use your own values for the following variables
