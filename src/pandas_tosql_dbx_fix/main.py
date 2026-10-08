@@ -174,7 +174,7 @@ def to_sql_dbx(
             compiled_stmt = stmt.compile(
                 compile_kwargs={"literal_binds": True}, dialect=DatabricksDialect()
             )
-            # the standard process is to execute the stmt directly without compiling it
-            cursor_result = conn.execute(compiled_stmt)
+            # SQLAlchemy 2.1 removed execution of Compiled objects; send the literal SQL string to the driver.
+            cursor_result = conn.exec_driver_sql(str(compiled_stmt))
 
     return cursor_result.rowcount  # the rowcount is always -1 when it's successful
